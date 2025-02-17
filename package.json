@@ -1,0 +1,23 @@
+{
+  "name": "furukawa_ti",
+  "version": "1.0.0",
+  "description": "Desenvolvimento de um sistema desktop para uma gestão de ordem de serviços",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanfreire/furukawa_ti.git"
+  },
+  "author": "Nathan Freire Furukawa Santos",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nathanfreire/furukawa_ti/issues"
+  },
+  "homepage": "https://github.com/nathanfreire/furukawa_ti#readme",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
+}
