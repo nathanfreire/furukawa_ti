@@ -19,6 +19,15 @@ footer {
     font-size: 15px;
 }
 
+/* Botao reset */
+#btnReset {
+    width: 64px;
+    height: 64px;
+    background-image: url('../img/vasoura.png');
+    border: none;
+    cursor: pointer;
+}
+
 footer p {
     margin: 0;
     font-family: sans-serif;
