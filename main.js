@@ -1,6 +1,9 @@
 console.log("Processo principal")
 
-const { app, BrowserWindow, nativeTheme, Menu } = require('electron')
+const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
+
+// Esta linha esta relacionada ao preload.js
+const path = require('node:path')
 
 // Janela principal
 let win
@@ -12,14 +15,27 @@ const createWindow = () => {
     height: 600,
     // autoHideMenuBar: true,
     // minimizable: false,
-    resizable: false
+    resizable: false,
+    // ativação do preload.js
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   })
 
   // menu personalizado
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
-
   win.loadFile('./src/views/index.html')
+
+  // recebimento dos pedidos do renderizador para abertura de janelas (botoes)
+  // autorizado no preload.js
+  ipcMain.on('client-window', () => {
+    clientWindow()
+  })
+
+  ipcMain.on('os-window', () => {
+    osWindow()
+  })
 }
 
 // Janela sobre 
@@ -27,7 +43,7 @@ function aboutwindows() {
   nativeTheme.themeSource = 'light'
   // a linha abaixo obtem a janela principal
   const main = BrowserWindow.getFocusedWindow()
-  let about 
+  let about
   // Estabelece uma relação hierárquica entre janelas
   if (main) {
     // Criar a janela sobre
@@ -41,8 +57,48 @@ function aboutwindows() {
       modal: true
     })
   }
+
   // Carregar o documento html na janela
   about.loadFile('./src/views/sobre.html')
+}
+
+// janela clientes
+let client
+function clientWindow() {
+  nativeTheme.themeSource = 'light'
+  const main = BrowserWindow.getFocusedWindow()
+  if (main) {
+    client = new BrowserWindow({
+      width: 1010,
+      height: 720,
+      //autoHideMenuBar: true,
+      resizable: false,
+      parent: main,
+      modal: true
+    })
+  }
+    client.loadFile('./src/views/cliente.html')
+    client.center()
+  
+}
+
+// janela OS
+let os
+function osWindow() {
+  nativeTheme.themeSource = 'light'
+  const main = BrowserWindow.getFocusedWindow()
+  if (main) {
+    os = new BrowserWindow({
+      width: 1010,
+      height: 720,
+      //autoHideMenuBar: true,
+      resizable: false,
+      parent: main,
+      modal: true
+    })
+  }
+  os.loadFile('./src/views/os.html')
+  os.center()
 }
 
 // Iniciar a aplicação 
@@ -75,10 +131,12 @@ const template = [
     label: 'Cadastro',
     submenu: [
       {
-        label: 'Clientes'
+        label: 'Clientes',
+        click: () => clientWindow()
       },
       {
-        label: 'OS'
+        label: 'OS',
+        click: () => osWindow()
       },
       {
         type: 'separator'
@@ -89,11 +147,23 @@ const template = [
         accelerator: 'Alt+F4'
       }
     ]
+  },
 
-  },
   {
-    label: 'Relatório'
+    label: 'Relatórios',
+    submenu: [
+      {
+        label: "Clientes"
+      },
+      {
+        label: "OS abertas"
+      },
+      {
+        label: "OS concluídas"
+      }
+    ]
   },
+
   {
     label: 'Ferramentas',
     submenu: [
