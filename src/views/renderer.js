@@ -18,3 +18,14 @@ function os() {
     //uso do api(autorizanda no preload.js)
     api.osWindow()
 }
+
+// Troca do ícone do abnco de dados (usando a api do preload.js)
+api.dbStatus((event, message)=>{
+    // teste do recebimento da mensagem
+    console.log(message)
+    if (message === "conectado") {
+        document.getElementById('statusdb').src = "../public/img/dbon.png"
+    } else {
+        document.getElementById('statusdb').src = "../public/img/dboff.png"
+    }
+})
